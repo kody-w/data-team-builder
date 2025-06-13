@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "name": "Alpha Item",
+        "rating": 95,
+        "category": "Premium",
+        "description": "High-performance item with excellent stats",
+        "stats": {
+            "power": 85,
+            "speed": 92,
+            "defense": 78
+        }
+    },
+    {
+        "id": 2,
+        "name": "Beta Module",
+        "rating": 88,
+        "category": "Standard",
+        "description": "Reliable mid-tier option",
+        "stats": {
+            "power": 75,
+            "speed": 80,
+            "defense": 85
+        }
+    },
+    {
+        "id": 3,
+        "name": "Gamma Core",
+        "rating": 92,
+        "category": "Premium",
+        "description": "Advanced technology component",
+        "stats": {
+            "power": 90,
+            "speed": 88,
+            "defense": 82
+        }
+    }
+]
