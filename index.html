@@ -339,7 +339,7 @@
                 
                 <div class="input-group">
                     <label for="dataUrl">Data URL (GitHub Raw URL)</label>
-                    <input type="text" id="dataUrl" placeholder="https://raw.githubusercontent.com/...">
+                    <input type="text" id="dataUrl" placeholder="https://raw.githubusercontent.com/..." value="https://raw.githubusercontent.com/kody-w/data-team-builder/main/data/sample-data.json">
                 </div>
                 
                 <button class="btn" onclick="loadData()">Load Data</button>
@@ -381,7 +381,7 @@
                 <div id="dataGrid" class="data-grid">
                     <div class="loading">
                         <div class="spinner"></div>
-                        <p>Load data to get started</p>
+                        <p>Loading data from GitHub...</p>
                     </div>
                 </div>
             </div>
@@ -395,26 +395,16 @@
         let team = [null, null, null];
         let currentFilter = 'all';
 
-        // Sample data for demo
-        const sampleData = [
-            { id: 1, name: "Alpha Item", rating: 95, category: "Premium", description: "High-performance item with excellent stats" },
-            { id: 2, name: "Beta Module", rating: 88, category: "Standard", description: "Reliable mid-tier option" },
-            { id: 3, name: "Gamma Core", rating: 92, category: "Premium", description: "Advanced technology component" },
-            { id: 4, name: "Delta System", rating: 78, category: "Basic", description: "Entry-level system" },
-            { id: 5, name: "Epsilon Unit", rating: 85, category: "Standard", description: "Balanced performance unit" },
-            { id: 6, name: "Zeta Framework", rating: 91, category: "Premium", description: "Next-generation framework" },
-            { id: 7, name: "Eta Processor", rating: 82, category: "Standard", description: "Efficient processing module" },
-            { id: 8, name: "Theta Engine", rating: 96, category: "Premium", description: "Top-tier performance engine" },
-            { id: 9, name: "Iota Component", rating: 75, category: "Basic", description: "Simple but effective component" },
-            { id: 10, name: "Kappa Device", rating: 89, category: "Standard", description: "Versatile multi-use device" }
-        ];
+        // Default GitHub repo URL
+        const defaultDataUrl = 'https://raw.githubusercontent.com/kody-w/data-team-builder/main/data/sample-data.json';
 
-        // Initialize with sample data
-        window.onload = function() {
-            allData = sampleData;
-            filteredData = allData;
-            displayData();
-            showStatus('Loaded sample data. Enter a GitHub raw URL to load custom data.', 'success');
+        // Initialize with data from GitHub
+        window.onload = async function() {
+            // Set the default URL in the input
+            document.getElementById('dataUrl').value = defaultDataUrl;
+            
+            // Auto-load the default data
+            await loadData();
         };
 
         // Load data from URL
@@ -442,7 +432,17 @@
             } catch (error) {
                 console.error('Error loading data:', error);
                 showStatus('Error loading data. Please check the URL and try again.', 'error');
-                displayData(); // Show existing data
+                
+                // If it's the default URL that failed, show a helpful message
+                if (url === defaultDataUrl) {
+                    document.getElementById('dataGrid').innerHTML = `
+                        <div class="loading">
+                            <p style="color: #e53e3e;">Failed to load default data from GitHub.</p>
+                            <p style="margin-top: 10px;">Make sure the repository is public and the path is correct:</p>
+                            <p style="font-family: monospace; margin-top: 10px; font-size: 0.9em;">${defaultDataUrl}</p>
+                        </div>
+                    `;
+                }
             }
         }
 
@@ -464,7 +464,12 @@
                             ${item.rating ? `<div>Rating: ${item.rating}</div>` : ''}
                             ${item.category ? `<div>Category: ${item.category}</div>` : ''}
                             ${item.description ? `<div>${item.description}</div>` : ''}
-                            ${Object.entries(item).filter(([k]) => !['id', 'name', 'title', 'rating', 'category', 'description'].includes(k)).slice(0, 3).map(([k, v]) => `<div>${k}: ${v}</div>`).join('')}
+                            ${Object.entries(item).filter(([k]) => !['id', 'name', 'title', 'rating', 'category', 'description'].includes(k)).slice(0, 3).map(([k, v]) => {
+                                if (typeof v === 'object') {
+                                    return `<div>${k}: ${JSON.stringify(v)}</div>`;
+                                }
+                                return `<div>${k}: ${v}</div>`;
+                            }).join('')}
                         </div>
                     </div>
                 `;
