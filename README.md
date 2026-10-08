@@ -1,3 +1,7 @@
+<!-- retired-notice:start -->
+> **Archived.** No longer maintained; kept public for reference.
+<!-- retired-notice:end -->
+
 # Data Team Builder
 
 A simple web application for browsing JSON data and building teams/collections.
